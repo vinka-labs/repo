@@ -1,0 +1,7 @@
+{
+    "preset": "loris",
+    "requireSpacesInAnonymousFunctionExpression": {
+      "beforeOpeningCurlyBrace": true
+    },
+    "disallowImplicitTypeConversion": ["numeric", "binary", "string"]
+}

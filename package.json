@@ -1,0 +1,35 @@
+{
+  "name": "repo",
+  "version": "1.0.0",
+  "description": "Database and repo utilities",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "lab -v -P test",
+    "lint": "eslint lib",
+    "style": "jscs lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vinka-labs/repo.git"
+  },
+  "author": "Vinka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vinka-labs/repo/issues"
+  },
+  "homepage": "https://github.com/vinka-labs/repo#readme",
+  "devDependencies": {
+    "code": "^5.1.0",
+    "eslint": "^4.10.0",
+    "jscs": "^3.0.7",
+    "jscs-preset-loris": "^1.2.0",
+    "lab": "^15.1.1",
+    "sinon": "^4.0.2"
+  },
+  "dependencies": {
+    "joi": "^13.0.1"
+  }
+}
