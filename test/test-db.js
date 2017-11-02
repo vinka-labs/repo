@@ -74,7 +74,11 @@ lab.experiment('DB', () => {
         const Sequelize = sinon.stub();
         const models = {init: sinon.stub()};
         db.inject({Pool}, Sequelize, log);
-        await db.connect(models, {user: 'sith', pass: 'sith', db: 'yavin', vinkaDB: 'vinka'});
+        const orm = await db.connect(models, {user: 'sith', pass: 'sith', db: 'yavin', vinkaDB: 'vinka'});
+
+        expect(orm.Sequelize).to.be.a.function();
+        expect(orm.sequelize).to.be.a.function();
+        expect(orm.model).to.be.a.function();
 
         expect(models.init.callCount).to.be.equal(1);
         expect(Pool.callCount).to.be.equal(3);
