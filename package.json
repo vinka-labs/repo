@@ -1,6 +1,6 @@
 {
   "name": "@vinka/repo",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Database and repo utilities",
   "main": "index.js",
   "directories": {
