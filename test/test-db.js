@@ -87,6 +87,7 @@ lab.experiment('DB', () => {
             user: 'sith',
             password: 'sith',
             host: undefined,
+            port: undefined,
             database: 'yavin',
             max: 1
         }]);
@@ -94,6 +95,7 @@ lab.experiment('DB', () => {
             user: 'sith',
             password: 'sith',
             host: undefined,
+            port: undefined,
             database: 'vinka',
             max: 1
         }]);
@@ -103,13 +105,13 @@ lab.experiment('DB', () => {
             user: 'sith',
             password: 'sith',
             host: undefined,
+            port: undefined,
             database: 'yavin',
             max: 1
         }]);
     });
 
     lab.test('Failed connect with create db 0', async () => {
-        const query = sinon.stub();
         const Pool = sinon.stub();
 
         const pool0 = {
@@ -266,6 +268,46 @@ lab.experiment('DB', () => {
         expect(models.init.callCount).to.be.equal(0);
         expect(Pool.callCount).to.be.equal(1);
         expect(Sequelize.callCount).to.be.equal(0);
+    });
+
+    lab.test('Host and port', async () => {
+        const query = sinon.stub();
+        const Pool = sinon.stub();
+
+        const pool2 = {
+            connect: sinon.stub().resolves({
+                end: sinon.stub(),
+            })
+        };
+
+        Pool.onCall(0).returns(pool2);
+
+        const Sequelize = sinon.stub();
+        const models = {init: sinon.stub()};
+        db.inject({Pool}, Sequelize, log);
+        const orm = await db.connect(models, {
+            user: 'sith',
+            pass: 'sith',
+            db: 'broadview',
+            options: {host: 'dufferin', port: 6767}
+        });
+
+        expect(orm.Sequelize).to.be.a.function();
+        expect(orm.sequelize).to.be.a.function();
+        expect(orm.model).to.be.a.function();
+
+        expect(models.init.callCount).to.be.equal(1);
+        expect(Pool.callCount).to.be.equal(1);
+        expect(Sequelize.callCount).to.be.equal(1);
+        expect(Pool.getCall(0).args).to.be.equal([{
+            user: 'sith',
+            password: 'sith',
+            host: 'dufferin',
+            port: 6767,
+            database: 'broadview',
+            max: 1
+        }]);
+        expect(query.callCount).to.be.equal(0);
     });
 });
 
