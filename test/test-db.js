@@ -298,7 +298,6 @@ lab.experiment('DB', () => {
 
         expect(models.init.callCount).to.be.equal(1);
         expect(Pool.callCount).to.be.equal(1);
-        expect(Sequelize.callCount).to.be.equal(1);
         expect(Pool.getCall(0).args).to.be.equal([{
             user: 'sith',
             password: 'sith',
@@ -306,6 +305,61 @@ lab.experiment('DB', () => {
             port: 6767,
             database: 'broadview',
             max: 1
+        }]);
+        expect(Sequelize.callCount).to.be.equal(1);
+        expect(Sequelize.getCall(0).args).to.be.equal(['broadview', 'sith', 'sith', {
+            dialect: 'postgres',
+            host: 'dufferin',
+            logging: false,
+            port: 6767,
+        }]);
+        expect(query.callCount).to.be.equal(0);
+    });
+
+    lab.test('SSL', async () => {
+        const query = sinon.stub();
+        const Pool = sinon.stub();
+
+        const pool2 = {
+            connect: sinon.stub().resolves({
+                end: sinon.stub(),
+            })
+        };
+
+        Pool.onCall(0).returns(pool2);
+
+        const Sequelize = sinon.stub();
+        const models = {init: sinon.stub()};
+        db.inject({Pool}, Sequelize, log);
+        const orm = await db.connect(models, {
+            user: 'sith',
+            pass: 'sith',
+            db: 'broadview',
+            ssl: true,
+            options: {host: 'dufferin', port: 6767}
+        });
+
+        expect(orm.Sequelize).to.be.a.function();
+        expect(orm.sequelize).to.be.a.function();
+        expect(orm.model).to.be.a.function();
+        expect(models.init.callCount).to.be.equal(1);
+        expect(Pool.callCount).to.be.equal(1);
+        expect(Pool.getCall(0).args).to.be.equal([{
+            user: 'sith',
+            password: 'sith',
+            host: 'dufferin',
+            port: 6767,
+            ssl: 'require',
+            database: 'broadview',
+            max: 1
+        }]);
+        expect(Sequelize.callCount).to.be.equal(1);
+        expect(Sequelize.getCall(0).args).to.be.equal(['broadview', 'sith', 'sith', {
+            dialect: 'postgres',
+            dialectOptions: {ssl: true},
+            host: 'dufferin',
+            logging: false,
+            port: 6767,
         }]);
         expect(query.callCount).to.be.equal(0);
     });
